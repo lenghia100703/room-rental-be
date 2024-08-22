@@ -2,7 +2,7 @@ import http from 'node:http'
 import { createTerminus } from '@godaddy/terminus'
 import config from '#configs/environment'
 import * as database from '#configs/database'
-// import * as email from '#lib/email'
+import * as email from '#configs/email'
 import logger from '#configs/logger'
 import app from '#configs/server'
 
@@ -21,7 +21,7 @@ export default async function main() {
 async function startServer() {
     setupErrorHandling()
     await database.connect(config.mongo.uri)
-    // await email.verifyConnection()
+    await email.verifyConnection()
 
     createTerminus(server, {
         onSignal,
@@ -60,13 +60,11 @@ async function onHealthCheck() {
 function setupErrorHandling() {
     process.on('unhandledRejection', (err, promise) => {
         logger.fatal({ err, msg: `Unhandled Rejection at: ${promise}` })
-        // send error to your error tracking software here
         process.exit(1)
     })
 
     process.on('uncaughtException', (err, origin) => {
         logger.fatal({ err, msg: `Uncaught Exception: ${err.message} at: ${origin}` })
-        // send error to your error tracking software here
         process.exit(1)
     })
 }

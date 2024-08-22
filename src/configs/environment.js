@@ -1,11 +1,8 @@
-import fs from 'node:fs'
 import path from 'node:path'
 import { bool, cleanEnv, num, str } from 'envalid'
 import { LogFormat, LogLevel } from '#enums/log'
 
 const appPath = path.dirname(import.meta.url).replace('file:', '')
-// const pkgPath = path.join(appPath, '../package.json')
-// const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'))
 
 const env = cleanEnv(process.env, {
     NODE_ENV: str({
@@ -41,7 +38,7 @@ const env = cleanEnv(process.env, {
 export default Object.freeze({
     appPath,
     openApiPath: path.join(appPath, '../openapi.yaml'),
-    version: "1.0.0",
+    version: '1.0.0',
     env: env.NODE_ENV,
     isProduction: env.NODE_ENV === 'production',
     port: env.PORT,

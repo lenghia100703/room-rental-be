@@ -1,0 +1,37 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "demo",
+  "type": "module",
+  "imports": {
+    "#config": "./src/config.js",
+    "#configs/*": "./src/configs/*.js",
+    "#controllers/*": "./src/controllers/*.js",
+    "#enums/*": "./src/enums/*.js",
+    "#exceptions/*": "./src/exceptions/*.js",
+    "#middlewares/*": "./src/middlewares/*.js",
+    "#models/*": "./src/models/*.js",
+    "#routes/*": "./src/routes/*.js",
+    "#securities/*": "./src/securities/*.js",
+    "#services/*": "./src/services/*.js",
+    "#utils/*": "./src/utils/*.js"
+  },
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --env-file=.env.development --watch bin/www.js",
+    "start": "node bin/www.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@godaddy/terminus": "^4.12.1",
+    "@opentelemetry/api": "^1.9.0",
+    "envalid": "^8.0.0",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "mongoose": "^8.5.3",
+    "pino": "^9.3.2",
+    "pino-pretty": "^11.2.2"
+  }
+}

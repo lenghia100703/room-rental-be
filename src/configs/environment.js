@@ -11,7 +11,8 @@ const env = cleanEnv(process.env, {
     }),
     PORT: num({ default: 3000 }),
     JWT_SECRET: str(),
-    JWT_EXPIRATION_MINUTES: num({ default: 15 }),
+    JWT_ACCESS_EXPIRATION_MINUTES: num({ default: 60 }),
+    JWT_REFRESH_EXPIRATION_MINUTES: num({ default: 1440 }),
     MONGO_URI: str(),
     EMAIL_HOST: str(),
     EMAIL_PORT: num({ default: 25 }),
@@ -33,6 +34,14 @@ const env = cleanEnv(process.env, {
     }),
     OTEL_SERVICE_NAME: str(),
     OTEL_EXPORTER_JAEGER_ENDPOINT: str(),
+    GITHUB_REPO: str(),
+    GITHUB_OWNER: str(),
+    GITHUB_TOKEN: str(),
+    GITHUB_BASEURL: str(),
+    GOOGLE_CLIENT_ID: str(),
+    GOOGLE_CLIENT_SECRET: str(),
+    GOOGLE_REDIRECT_URI: str(),
+    CORS_ORIGINS: str()
 })
 
 export default Object.freeze({
@@ -42,9 +51,24 @@ export default Object.freeze({
     env: env.NODE_ENV,
     isProduction: env.NODE_ENV === 'production',
     port: env.PORT,
+    github: {
+        repo: env.GITHUB_REPO,
+        owner: env.GITHUB_OWNER,
+        token: env.GITHUB_TOKEN,
+        baseUrl: env.GITHUB_BASEURL
+    },
+    google: {
+        clientId: env.GOOGLE_CLIENT_ID,
+        clientSecret: env.GOOGLE_CLIENT_SECRET,
+        redirectUri: env.GOOGLE_REDIRECT_URI
+    },
+    corsOrigin: {
+        domain: env.CORS_ORIGINS
+    },
     auth: {
         jwtSecret: env.JWT_SECRET,
-        jwtExpirationInterval: env.JWT_EXPIRATION_MINUTES,
+        jwtAccessExpiration: env.JWT_ACCESS_EXPIRATION_MINUTES,
+        jwtRefreshExpiration: env.JWT_REFRESH_EXPIRATION_MINUTES
     },
     log: {
         format: env.LOG_FORMAT,

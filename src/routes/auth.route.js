@@ -1,22 +1,22 @@
 import express from 'express'
-import * as controller from '#controllers/auth'
+import * as authController from '#controllers/auth'
 
 const router = express.Router()
 
 router //
     .route('/register')
-    .post(controller.register)
+    .post(authController.register)
 
 router //
     .route('/login')
-    .post(controller.login)
+    .post(authController.login)
 
 router //
     .route('/logout')
-    .post(controller.logout)
+    .post(authController.logout)
 
 router //
     .route('/refresh-token')
-    .post(controller.refreshToken)
+    .post(authController.refreshToken)
 
 export default router

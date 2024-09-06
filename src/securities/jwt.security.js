@@ -3,13 +3,13 @@ import config from '#configs/environment'
 import { setCookie } from '#utils/cookie'
 import { getUnixTime } from 'date-fns'
 import { JWT_CONSTANTS } from '#constants/index'
-import http from 'node:http'
+import httpStatus from 'http-status'
 
 const { jwtSecret, jwtAccessExpiration, jwtRefreshExpiration } = config.auth
 
 export const generateAccessToken = (res, user) => {
     const payload = {
-        sub: user._id,
+        _id: user._id,
         role: user.role,
         iat: getUnixTime(Date.now()),
     }
@@ -26,15 +26,15 @@ export const generateAccessToken = (res, user) => {
         },
     )
 
-    res.addHeader('Authorization', `Bearer ${token}`)
-    res.addHeader(JWT_CONSTANTS.HEADER_ACCESS_TOKEN, token)
+    res.setHeader('Authorization', `Bearer ${token}`)
+    res.setHeader(JWT_CONSTANTS.HEADER_ACCESS_TOKEN, token)
 
     return token
 }
 
 export const generateRefreshToken = (res, user) => {
     const payload = {
-        sub: user._id,
+        _id: user._id,
         role: user.role,
         iat: getUnixTime(Date.now()),
     }
@@ -51,7 +51,19 @@ export const generateRefreshToken = (res, user) => {
         },
     )
 
-    res.addHeader(JWT_CONSTANTS.HEADER_REFRESH_TOKEN, token)
+    res.setHeader(JWT_CONSTANTS.HEADER_REFRESH_TOKEN, token)
 
     return token
+}
+
+export const getUserByToken = (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1]
+
+    if (!token) {
+        return res.status(httpStatus.UNAUTHORIZED).json({
+            message: 'Không có token trong yêu cầu',
+        })
+    }
+
+    return jwt.verify(token, jwtSecret)
 }

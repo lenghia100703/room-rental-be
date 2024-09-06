@@ -1,21 +1,17 @@
 import mongoose from 'mongoose'
 
 class BaseModel {
-    constructor(schemaDefinition) {
-        this.schema = new mongoose.Schema(
-            {
-                ...schemaDefinition,
-                createdBy: {
-                    type: String,
-                },
-                updatedBy: {
-                    type: String,
-                },
+    constructor(schema) {
+        this.schema = schema
+
+        this.schema.add({
+            createdBy: {
+                type: String,
             },
-            {
-                timestamps: true,
-            }
-        )
+            updatedBy: {
+                type: String,
+            },
+        })
     }
 
     createModel(modelName) {

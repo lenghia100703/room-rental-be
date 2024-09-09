@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import helmet from 'helmet'
 import logger from '#configs/logger'
 import routes from '#routes/index'
+import authConfig from '#configs/auth'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(helmet())
 app.use(cors())
 app.use(pino({ logger }))
 app.use(cookieParser())
+app.use(authConfig)
 
 // routes
 app.use('/api', routes)

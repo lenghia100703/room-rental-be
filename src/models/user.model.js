@@ -86,6 +86,10 @@ userSchema.method({
     },
 })
 
+userSchema.statics = {
+    roles,
+}
+
 const baseModel = new BaseModel(userSchema)
 
 const User = baseModel.createModel('User')

@@ -53,12 +53,12 @@ export const register = async (req, res) => {
             role: req.body.role,
         }).save()
 
-        return res.status(httpStatus.OK).json({
+        return res.status(httpStatus.CREATED).json({
             data: user.transform(),
             message: 'Đăng ký thành công',
         })
     } catch (e) {
-        return res.status(e.status || httpStatus.INTERNAL_SERVER_ERROR).json({
+        return res.status(e.status || httpStatus.BAD_REQUEST).json({
             message: e.message || 'Đăng ký thất bại',
         })
     }

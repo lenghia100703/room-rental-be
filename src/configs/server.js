@@ -8,6 +8,7 @@ import helmet from 'helmet'
 import logger from '#configs/logger'
 import routes from '#routes/index'
 import authConfig from '#configs/auth'
+import openApiMiddleware from '#middlewares/openapi'
 
 const app = express()
 
@@ -17,6 +18,8 @@ app.use(cors())
 app.use(pino({ logger }))
 app.use(cookieParser())
 app.use(authConfig)
+
+app.use('/docs', ...openApiMiddleware)
 
 // routes
 app.use('/api', routes)

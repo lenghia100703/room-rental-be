@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
         username: {
             type: String,
             maxlength: 128,
+            required: true,
             index: true,
             trim: true,
         },
@@ -34,6 +35,7 @@ const userSchema = new mongoose.Schema(
         },
         role: {
             type: String,
+            required: true,
             enum: roles,
             default: 'user',
         },

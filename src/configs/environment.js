@@ -9,6 +9,7 @@ const env = cleanEnv(process.env, {
         choices: ['development', 'test', 'production', 'staging'],
         default: 'development',
     }),
+    DEFAULT_AVATAR: str(),
     PORT: num({ default: 3000 }),
     JWT_SECRET: str(),
     JWT_ACCESS_EXPIRATION_MINUTES: num({ default: 60 }),
@@ -51,6 +52,7 @@ export default Object.freeze({
     env: env.NODE_ENV,
     isProduction: env.NODE_ENV === 'production',
     port: env.PORT,
+    defaultAvatar: env.DEFAULT_AVATAR,
     github: {
         repo: env.GITHUB_REPO,
         owner: env.GITHUB_OWNER,

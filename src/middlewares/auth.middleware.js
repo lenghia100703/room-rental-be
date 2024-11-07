@@ -5,7 +5,7 @@ import APIError from '#exceptions/api'
 import User from '#models/user'
 
 export const ADMIN = 'admin'
-export const LOGGED_USER = '_loggedUser'
+export const LOGGED_USER = 'user'
 
 const handleJWT = (req, res, next, roles) => async (err, user, info) => {
     const logIn = promisify(req.logIn)
@@ -24,8 +24,6 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
     }
 
     if (roles === LOGGED_USER) {
-        console.log(user)
-        
         if (user.role !== ADMIN && req.params.id !== user._id.toString()) {
             apiError.status = httpStatus.FORBIDDEN
             apiError.message = 'Forbidden'

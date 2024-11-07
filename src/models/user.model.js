@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema(
         avatar: {
             type: String,
             trim: true,
+            default: config.defaultAvatar
         },
         accessToken: {
             type: String,
@@ -74,7 +75,7 @@ userSchema.pre('save', async function save(next) {
 userSchema.method({
     transform() {
         const transformed = {}
-        const fields = ['_id', 'username', 'email', 'avatar', 'role', 'createdAt', 'updatedAt']
+        const fields = ['_id', 'username', 'accessToken', 'email', 'avatar', 'role', 'createdAt', 'updatedAt']
 
         for (const field of fields) {
             transformed[field] = this[field]

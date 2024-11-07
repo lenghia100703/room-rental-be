@@ -57,8 +57,7 @@ export const generateRefreshToken = (res, user) => {
 }
 
 export const getUserByToken = (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1]
-
+    const token = req.cookies[JWT_CONSTANTS.COOKIE_ACCESS_TOKEN] || req.headers['authorization']?.split(' ')[1]
     if (!token) {
         return res.status(httpStatus.UNAUTHORIZED).json({
             message: 'Không có token trong yêu cầu',

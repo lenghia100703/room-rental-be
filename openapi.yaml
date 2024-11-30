@@ -30,7 +30,7 @@ paths:
         '500':
           description: Not healthy
 
-  /v1/auth/register:
+  /api/auth/register:
     post:
       tags: [auth]
       summary: Register by email
@@ -78,9 +78,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
 
-
-
-  /v1/auth/login:
+  /api/auth/login:
     post:
       tags: [ auth ]
       summary: Login by email
@@ -116,6 +114,150 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
+
+
+  /api/room:
+    get:
+      summary: Get list of rooms
+      description: Retrieve a paginated list of rooms or all rooms if perPage is set to -1.
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: perPage
+          in: query
+          description: Number of items per page (-1 for all)
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        200:
+          description: List of rooms retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+                  page:
+                    type: integer
+                  totalPages:
+                    type: integer
+                  message:
+                    type: string
+        500:
+          description: Internal server error
+    post:
+      summary: Create a room
+      description: Add a new room to the database
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoomRequest'
+      responses:
+        201:
+          description: Room created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Room'
+                  message:
+                    type: string
+        500:
+          description: Internal server error
+  /api/room/{roomId}:
+    get:
+      summary: Get room by ID
+      description: Retrieve a room by its ID
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Room retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Room'
+                  message:
+                    type: string
+        404:
+          description: Room not found
+        500:
+          description: Internal server error
+    put:
+      summary: Update a room
+      description: Update details of an existing room
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditRoomRequest'
+      responses:
+        200:
+          description: Room updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Room'
+                  message:
+                    type: string
+        404:
+          description: Room not found
+        500:
+          description: Internal server error
+    delete:
+      summary: Delete a room
+      description: Remove a room from the database
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Room deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        404:
+          description: Room not found
+        500:
+          description: Internal server error
 
 
 components:
@@ -179,6 +321,122 @@ components:
             $ref: '#/components/schemas/Message'
           example: { 'message': 'Successfully' }
   schemas:
+    Room:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        price:
+          type: number
+        images:
+          type: array
+          items:
+            type: string
+        bedroom:
+          type: integer
+        bathroom:
+          type: integer
+        size:
+          type: number
+        latitude:
+          type: number
+        longitude:
+          type: number
+        city:
+          type: string
+        address:
+          type: string
+        school:
+          type: string
+        bus:
+          type: string
+        restaurant:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [ "AVAILABLE", "RENTED" ]
+        owner:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateRoomRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        ownerId:
+          type: string
+        price:
+          type: number
+        bedroom:
+          type: integer
+        bathroom:
+          type: integer
+        size:
+          type: number
+        latitude:
+          type: number
+        longitude:
+          type: number
+        city:
+          type: string
+        address:
+          type: string
+        school:
+          type: string
+        bus:
+          type: string
+        restaurant:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
+    EditRoomRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        ownerId:
+          type: string
+        price:
+          type: number
+        bedroom:
+          type: integer
+        bathroom:
+          type: integer
+        size:
+          type: number
+        latitude:
+          type: number
+        longitude:
+          type: number
+        city:
+          type: string
+        address:
+          type: string
+        school:
+          type: string
+        bus:
+          type: string
+        restaurant:
+          type: string
+        images:
+          type: array
+          items:
+            type: string
     Message:
       type: object
       properties:

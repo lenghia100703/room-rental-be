@@ -35,7 +35,7 @@ export const login = async (req, res) => {
 
         return res.status(httpStatus.OK).json({
             message: 'Đăng nhập thành công',
-            data: user.transform(),
+            data: user,
         })
     } catch (e) {
         return res.status(e.status || httpStatus.INTERNAL_SERVER_ERROR).json({

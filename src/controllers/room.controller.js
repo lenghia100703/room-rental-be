@@ -19,3 +19,7 @@ export const deleteRoom = async (req, res) => {
 export const getRoomById = async (req, res) => {
     await roomService.getRoomById(req, res)
 }
+
+export const markRoom = async (req, res) => {
+    await roomService.markRoom(req, res)
+}

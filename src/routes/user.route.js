@@ -1,14 +1,23 @@
 import express from 'express'
 import * as userController from '#controllers/user'
+import { authorize } from '#middlewares/auth'
 
 const router = express.Router()
 
 router //
     .route('/me')
-    .get(userController.getCurrentUser)
+    .get(authorize(), userController.getCurrentUser)
 
 router //
     .route('/:id')
-    .get(userController.getUserById)
+    .get(authorize(), userController.getUserById)
+
+router
+    .route('/marked-rooms')
+    .get(authorize(), userController.getMarkedRooms)
+
+router
+    .route('/check-room/:roomId')
+    .get(authorize(), userController.getMarkedRoomByRoomId)
 
 export default router

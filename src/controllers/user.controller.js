@@ -7,3 +7,11 @@ export const getUserById = async (req, res) => {
 export const getCurrentUser = async (req, res) => {
     await userService.getCurrentUser(req, res)
 }
+
+export const getMarkedRooms = async (req, res) => {
+    await userService.getMarkedRooms(req, res)
+}
+
+export const getMarkedRoomByRoomId = async (req, res) => {
+    await userService.getMarkedRoomByRoomId(req, res)
+}

@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        markedRooms: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Room',
+        }],
     },
     {
         timestamps: true,

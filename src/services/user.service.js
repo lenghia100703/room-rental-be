@@ -1,6 +1,7 @@
 import httpStatus from 'http-status'
 import User from '#models/user'
 import { getUserByToken } from '#securities/jwt'
+import { PAGE, PER_PAGE } from '#constants/pagination'
 
 export const getUserById = async (req, res, id) => {
     try {
@@ -31,3 +32,65 @@ export const getCurrentUser = async (req, res) => {
         })
     }
 }
+
+export const getMarkedRooms = async (req, res) => {
+    try {
+        const userId = req.user.id
+        const page = parseInt(req.query.page) || PAGE
+        const limit = parseInt(req.query.perPage) || PER_PAGE
+        const skip = (page - 1) * limit
+
+        const user = await User.findById(userId).populate('markedRooms')
+        if (!user) {
+            return res.status(404).json({
+                message: 'Không tìm thấy người dùng',
+            })
+        }
+        const markedRooms = user.markedRooms.slice(skip, skip + limit)
+
+        return res.status(200).json({
+            data: markedRooms,
+            message: 'Lấy danh sách phòng đã đánh dấu thành công',
+            page: page,
+            totalPages: Math.ceil(user.markedRooms.length / limit),
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || 'Có lỗi xảy ra khi lấy danh sách phòng',
+        })
+    }
+}
+
+export const getMarkedRoomByRoomId = async (req, res) => {
+    try {
+        const { roomId } = req.params
+        const userId = req.user._id
+        const user = await User.findById(userId).populate('markedRooms')
+        if (!user) {
+            return res.status(404).json({
+                message: 'Không tìm thấy người dùng',
+            })
+        }
+        const markedRoom = user.markedRooms.find(room => room._id.toString() === roomId)
+        if (!markedRoom) {
+            return res.status(200).json({
+                data: {
+                    isMarked: false,
+                },
+                message: 'Phòng chưa được đánh dấu',
+            })
+        }
+        return res.status(200).json({
+            data: {
+                isMarked: true,
+            },
+            message: 'Phòng đã được đánh dấu',
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || 'Có lỗi xảy ra khi lấy thông tin phòng đã đánh dấu',
+        })
+    }
+}
+
+

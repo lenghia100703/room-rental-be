@@ -4,7 +4,7 @@ import passport from 'passport'
 import APIError from '#exceptions/api'
 import User from '#models/user'
 
-export const ADMIN = 'admin'
+export const ADMIN = 'owner'
 export const LOGGED_USER = 'user'
 
 const handleJWT = (req, res, next, roles) => async (err, user, info) => {
@@ -15,7 +15,6 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
         status: httpStatus.UNAUTHORIZED,
         stack: error ? error.stack : undefined,
     })
-
     try {
         if (error || !user) throw error
         await logIn(user, { session: false })

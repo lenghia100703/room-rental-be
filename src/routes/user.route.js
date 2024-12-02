@@ -14,7 +14,7 @@ router
 
 router //
     .route('/:id')
-    .get(authorize(), userController.getUserById)
+    .get(userController.getUserById)
     .put(authorize(), userController.updateUser)
 
 router

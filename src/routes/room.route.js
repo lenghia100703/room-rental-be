@@ -15,7 +15,7 @@ router
 
 router
     .route('/:roomId')
-    .get(authorize(), roomController.getRoomById)
+    .get(roomController.getRoomById)
     .put(authorize(), roomController.editRoom)
     .delete(authorize(), roomController.deleteRoom)
 

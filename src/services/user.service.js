@@ -12,7 +12,7 @@ export const getUserById = async (req, res, id) => {
             })
         }
         return res.status(httpStatus.OK).json({
-            data: user.transform(),
+            data: user,
             message: 'Lấy người dùng thành công',
         })
     } catch (e) {
@@ -35,28 +35,57 @@ export const getCurrentUser = async (req, res) => {
 
 export const getMarkedRooms = async (req, res) => {
     try {
-        const userId = req.user.id
+        const userId = req.user._id
         const page = parseInt(req.query.page) || PAGE
         const limit = parseInt(req.query.perPage) || PER_PAGE
         const skip = (page - 1) * limit
 
         const user = await User.findById(userId).populate('markedRooms')
         if (!user) {
-            return res.status(404).json({
+            return res.status(httpStatus.NOT_FOUND).json({
                 message: 'Không tìm thấy người dùng',
             })
         }
         const markedRooms = user.markedRooms.slice(skip, skip + limit)
 
-        return res.status(200).json({
+        return res.status(httpStatus.OK).json({
             data: markedRooms,
             message: 'Lấy danh sách phòng đã đánh dấu thành công',
             page: page,
             totalPages: Math.ceil(user.markedRooms.length / limit),
         })
     } catch (error) {
-        return res.status(500).json({
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
             message: error.message || 'Có lỗi xảy ra khi lấy danh sách phòng',
+        })
+    }
+}
+
+export const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params
+        const user = await User.findByIdAndUpdate(
+            id,
+            {
+                username: req.body.username,
+                email: req.body.email,
+                phone: req.body.phone
+            },
+            {
+                new: true
+            }
+        )
+        if (!user) {
+            return res.status(httpStatus.NOT_FOUND).json({
+                message: 'Không tìm thấy người dùng',
+            })
+        }
+        return res.status(httpStatus.OK).json({
+            message: 'Cập nhật hồ sơ thành công',
+        })
+    } catch (error) {
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
+            message: error.message || 'Có lỗi xảy ra khi cập nhật hồ sơ',
         })
     }
 }

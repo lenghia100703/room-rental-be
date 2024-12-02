@@ -15,3 +15,7 @@ export const getMarkedRooms = async (req, res) => {
 export const getMarkedRoomByRoomId = async (req, res) => {
     await userService.getMarkedRoomByRoomId(req, res)
 }
+
+export const updateUser = async (req, res) => {
+    await userService.updateUser(req, res)
+}

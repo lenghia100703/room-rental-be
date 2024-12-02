@@ -38,9 +38,11 @@ const roomSchema = new mongoose.Schema(
         city: {
             type: String,
         },
-        address: {
-            type: String,
-        },
+        address: [
+            {
+                type: String,
+            },
+        ],
         school: {
             type: String,
         },

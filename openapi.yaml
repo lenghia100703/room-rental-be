@@ -429,7 +429,9 @@ components:
         city:
           type: string
         address:
-          type: string
+          type: array
+          items:
+            type: string
         school:
           type: string
         bus:
@@ -440,7 +442,7 @@ components:
           type: string
         status:
           type: string
-          enum: [ "AVAILABLE", "RENTED" ]
+          enum: [ "available", "rented" ]
         owner:
           type: string
         createdAt:
@@ -473,7 +475,9 @@ components:
         city:
           type: string
         address:
-          type: string
+          type: array
+          items:
+            type: string
         school:
           type: string
         bus:
@@ -508,7 +512,9 @@ components:
         city:
           type: string
         address:
-          type: string
+          type: array
+          items:
+            type: string
         school:
           type: string
         bus:

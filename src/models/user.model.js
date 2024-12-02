@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema(
             minlength: 6,
             maxlength: 128,
         },
+        phone: {
+            type: String,
+            match: /(0[3|5|7|8|9])+([0-9]{8})\b/,
+            default: ''
+        },
         username: {
             type: String,
             maxlength: 128,

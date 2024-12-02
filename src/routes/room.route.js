@@ -10,6 +10,10 @@ router
     .post(authorize(), roomController.createRoom)
 
 router
+    .route('/owner')
+    .get(authorize(), roomController.getRoomByOwner)
+
+router
     .route('/:roomId')
     .get(authorize(), roomController.getRoomById)
     .put(authorize(), roomController.editRoom)

@@ -8,13 +8,14 @@ router //
     .route('/me')
     .get(authorize(), userController.getCurrentUser)
 
-router //
-    .route('/:id')
-    .get(authorize(), userController.getUserById)
-
 router
     .route('/marked-rooms')
     .get(authorize(), userController.getMarkedRooms)
+
+router //
+    .route('/:id')
+    .get(authorize(), userController.getUserById)
+    .put(authorize(), userController.updateUser)
 
 router
     .route('/check-room/:roomId')

@@ -217,3 +217,46 @@ export const markRoom = async (req, res) => {
         })
     }
 }
+
+export const getRoomByOwner = async (req, res) => {
+    try {
+        const ownerId = req.user._id
+        let { page, perPage } = req.query
+        let rooms, totalRooms
+        if (!page || !perPage) {
+            page = PAGE
+            perPage = PER_PAGE
+        }
+        const user = await User.findById(ownerId)
+        if (!user) {
+            return res.status(404).json({
+                message: 'Chủ trọ không tồn tại',
+            })
+        }
+        if (parseInt(perPage, 10) === -1) {
+            rooms = await Room.find({
+                owner: ownerId
+            })
+            totalRooms = rooms.length
+        } else {
+            const skip = (page - 1) * perPage
+            const limit = parseInt(perPage, 10)
+            rooms = await Room.find({
+                owner: ownerId
+            }).skip(skip).limit(limit)
+            totalRooms = await Room.find({
+                owner: ownerId
+            }).countDocuments()
+        }
+        return res.status(httpStatus.OK).json({
+            data: rooms,
+            page: parseInt(page, 10),
+            totalPages: perPage === -1 ? 1 : Math.ceil(totalRooms / perPage),
+            message: 'Lấy danh sách phòng thành công',
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message || 'Lấy danh sách phòng thất bại',
+        })
+    }
+}

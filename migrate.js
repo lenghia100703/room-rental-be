@@ -9,21 +9,28 @@ mongoose.connect('mongodb+srv://21020542:WxGp2FgZK3nBMXYK@cluster0.hbqlx.mongodb
 
 async function migrateAddressField() {
     try {
-        // Tìm tất cả các phòng có trường address chứa chuỗi mảng không chuẩn
+        // Tìm tất cả các phòng trong cơ sở dữ liệu
         const rooms = await Room.find()
 
         for (const room of rooms) {
-            // Chuyển đổi từng phần tử address thành mảng thực sự
-            room.address = room.address.map((addr) => {
-                // Loại bỏ khoảng trắng thừa
-                const trimmed = addr.trim()
-                try {
-                    return JSON.parse(trimmed.replace(/'/g, '"'))
-                } catch (err) {
-                    console.error(`Failed to parse address: ${addr}`)
-                    return addr
-                }
-            }).flat()
+            room.description = room.description.trim()
+            room.title = room.title.trim()
+            room.city = room.city.trim()
+            // if (Array.isArray(room.address)) {
+            //     // Loại bỏ khoảng trắng thừa trong từng phần tử mảng
+            //     room.address = room.address.map(addr => addr.trim())
+            // } else if (typeof room.address === 'string') {
+            //     // Loại bỏ khoảng trắng nếu address là chuỗi
+            //     room.address = room.address.trim()
+            // } else if (typeof room.description === 'string') {
+            //     room.description = room.description.trim()
+            // } else if (typeof room.city === 'string') {
+            //     // Loại bỏ khoảng trắng nếu city là chuỗi
+            //     room.city = room.city.trim()
+            // } else if (typeof room.title === 'string') {
+            //     // Loại bỏ khoảng trắng nếu title là chuỗi
+            //     room.title = room.title.trim()
+            // }
             await room.save()
         }
 
@@ -31,8 +38,10 @@ async function migrateAddressField() {
     } catch (error) {
         console.error('Error migrating address field:', error)
     } finally {
+        // Đóng kết nối sau khi hoàn thành
         mongoose.connection.close()
     }
 }
 
+// Gọi hàm migrate
 migrateAddressField()

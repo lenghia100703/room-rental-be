@@ -2,23 +2,43 @@ import Room from '#models/room'
 import { PAGE, PER_PAGE } from '#constants/pagination'
 import httpStatus from 'http-status'
 import User from '#models/user'
+import { removeVietnameseTones } from '#utils/removeVietnameseTones'
 
 export const getListRooms = async (req, res) => {
     try {
-        let { page, perPage } = req.query
+        let { page, perPage, city, bedroom, bathroom, priceFrom, priceTo } = req.query
         if (!page || !perPage) {
             page = PAGE
             perPage = PER_PAGE
         }
+        const filter = {}
+        if (city) {
+            const normalizedCity = removeVietnameseTones(city)
+            filter.city = {
+                $regex: new RegExp(city, 'i')
+            }
+        }
+        if (bedroom) {
+            filter.bedroom = parseInt(bedroom, 10)
+        }
+        if (bathroom) {
+            filter.bathroom = parseInt(bathroom, 10)
+        }
+        if (priceFrom) {
+            filter.price = { ...filter.price, $gte: parseFloat(priceFrom) }
+        }
+        if (priceTo) {
+            filter.price = { ...filter.price, $lte: parseFloat(priceTo) }
+        }
         let rooms, totalRooms
         if (parseInt(perPage, 10) === -1) {
-            rooms = await Room.find()
+            rooms = await Room.find(filter)
             totalRooms = rooms.length
         } else {
             const skip = (page - 1) * perPage
             const limit = parseInt(perPage, 10)
-            rooms = await Room.find().skip(skip).limit(limit)
-            totalRooms = await Room.countDocuments()
+            rooms = await Room.find(filter).skip(skip).limit(limit)
+            totalRooms = await Room.countDocuments(filter)
         }
         return res.status(httpStatus.OK).json({
             data: rooms,
@@ -235,17 +255,17 @@ export const getRoomByOwner = async (req, res) => {
         }
         if (parseInt(perPage, 10) === -1) {
             rooms = await Room.find({
-                owner: ownerId
+                owner: ownerId,
             })
             totalRooms = rooms.length
         } else {
             const skip = (page - 1) * perPage
             const limit = parseInt(perPage, 10)
             rooms = await Room.find({
-                owner: ownerId
+                owner: ownerId,
             }).skip(skip).limit(limit)
             totalRooms = await Room.find({
-                owner: ownerId
+                owner: ownerId,
             }).countDocuments()
         }
         return res.status(httpStatus.OK).json({

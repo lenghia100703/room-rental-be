@@ -1,30 +1,32 @@
-import mongoose from 'mongoose'
-import Room from '#models/room' // Đường dẫn tới model Room
+import mongoose from 'mongoose';
+import Room from '#models/room'; // Đường dẫn tới model Room
 
-// Kết nối MongoDB
 mongoose.connect('mongodb+srv://21020542:WxGp2FgZK3nBMXYK@cluster0.hbqlx.mongodb.net/Rental?retryWrites=true&w=majority&appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-})
+});
 
-async function migrateAddressField() {
+async function migrateOwnerField() {
     try {
-        // Tìm tất cả các phòng trong cơ sở dữ liệu
-        const rooms = await Room.find()
+        // Tìm các tài liệu có `owner` là string
+        const rooms = await Room.find();
+        console.log(`Found ${rooms.length} documents with string owner`);
 
+        // Cập nhật từng tài liệu
         for (const room of rooms) {
-            room.price = room.price * 1000000
-            await room.save()
+            const updated = await Room.updateOne(
+                { _id: room._id },
+                { $set: { owner: new mongoose.Types.ObjectId(room.owner) } }
+            );
+            console.log(`Updated room with ID: ${room._id}, Modified count: ${updated.modifiedCount}`);
         }
 
-        console.log('Address migration completed successfully!')
+        console.log('Migration completed successfully');
+        mongoose.disconnect();
     } catch (error) {
-        console.error('Error migrating address field:', error)
-    } finally {
-        // Đóng kết nối sau khi hoàn thành
-        mongoose.connection.close()
+        console.error('Error during migration:', error);
+        mongoose.disconnect();
     }
 }
 
-// Gọi hàm migrate
-migrateAddressField()
+migrateOwnerField();

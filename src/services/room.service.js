@@ -15,7 +15,7 @@ export const getListRooms = async (req, res) => {
         if (city) {
             const normalizedCity = removeVietnameseTones(city)
             filter.city = {
-                $regex: new RegExp(city, 'i')
+                $regex: new RegExp(city, 'i'),
             }
         }
         if (bedroom) {
@@ -55,6 +55,13 @@ export const getListRooms = async (req, res) => {
 
 export const createRoom = async (req, res) => {
     try {
+        const ownerId = req.user._id
+        const user = await User.findById(ownerId)
+        if (!user) {
+            return res.status(404).json({
+                message: 'Không tìm thấy người dùng',
+            })
+        }
         const {
             title,
             price,
@@ -70,7 +77,6 @@ export const createRoom = async (req, res) => {
             bus,
             restaurant,
             description,
-            ownerId,
         } = req.body
         const newRoom = new Room({
             title,
@@ -261,12 +267,8 @@ export const getRoomByOwner = async (req, res) => {
         } else {
             const skip = (page - 1) * perPage
             const limit = parseInt(perPage, 10)
-            rooms = await Room.find({
-                owner: ownerId,
-            }).skip(skip).limit(limit)
-            totalRooms = await Room.find({
-                owner: ownerId,
-            }).countDocuments()
+            rooms = await Room.find({ owner: ownerId }).skip(skip).limit(limit)
+            totalRooms = await Room.find({ owner: ownerId }).countDocuments()
         }
         return res.status(httpStatus.OK).json({
             data: rooms,
